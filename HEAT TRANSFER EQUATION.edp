@@ -1,0 +1,30 @@
+//datas
+int n=20;
+real R=4;
+real t=0;
+real dt=1 ;
+real T=200 ;
+real mu=0.01;
+//les border:
+border Gamma1(t=0,pi){x=R*cos(t);y=R*sin(t);label=1;};
+border Gamma2(t=pi,2*pi){x=R*cos(t);y=R*sin(t);label=2;};
+//trace les frontiere:
+plot(Gamma1(n)+Gamma2(n));
+//le maillage:
+mesh Th=buildmesh(Gamma1(n)+Gamma2(n));
+plot(Th,wait=1);
+//=========================
+fespace Vh(Th,P1);
+Vh u,v,uold,f,g;
+//
+for(int n=0;n=T/dt;n++);
+//problem evolution(u,v)=int2d(Th)(u*v+dt*mu*(dx(u)*dx(v)+dy(u)*dy(v)))-int2d(Th)(uold*v)-int2d(Th)(f*v)+on(Gamma1,u=100);
+{
+t=t+dt;
+f=2*t^2+1;
+g=27;
+real uold=27;
+real u=70;
+}
+solve evolution(u,v)=int2d(Th)(u*v+dt*mu*(dx(u)*dx(v)+dy(u)*dy(v)))-int2d(Th)(uold*v)-int2d(Th)(f*v)+on(Gamma1,u=100);
+plot(u,wait=1,fill=1,cmm="graphe de chaleur u");

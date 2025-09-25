@@ -1,0 +1,24 @@
+//datas
+
+int n=50;
+//int outside=1;
+real a=2;
+//border c(t=0,1){label=1;x=a*(2*t-1);y=0;};
+//border b(t=0,1){label=2;x=a*cos(pi*t);y=a*sin(pi*t);};
+//a=2
+border c(t=-2,a){x=t;y=0;label=1;};
+border b(t=0,pi){x=2*cos(t);y=2*sin(t);label=2;};
+plot(c(n)+b(n));
+
+//int n=4;
+mesh Th=buildmesh(c(n)+b(n));
+plot(Th,wait=1);
+//
+
+fespace Vh(Th,P1);
+Vh u,v;
+func f=x*y;
+func g=sin(pi*x);
+solve poisson(u,v)=int2d(Th)(dx(u)*dx(v)+dy(u)*dy(v))-int2d(Th)(f*v)+on(c,u=0)+on(b,u=g);
+plot(u,fill=1,cmm="La fonction u",value=2,nbiso=40,dim=2);
+//plot(u,wait=1,nbiso=60,dim=3); 

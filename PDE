@@ -1,0 +1,39 @@
+//datas
+int n=50;
+real k=0.05;
+real a=1;
+real ue=80;
+real t=0,  dt=1, T=100;
+
+//bordures
+border g2(t=0,2*a){x=t;y=t-2;label=1;};
+border g1(t=2,0){x=t;y=-t+2;label=2;};
+border g3(t=2,a){x=0;y=t;label=1;};
+border g4(t=a,-a){x=a*cos((pi/2)*t);y=a*sin((pi/2)*t);label=2;};
+border g5(t=-a,-2*a){x=0;y=t;label=1;};
+plot(g2(n)+g1(n)+g3(n)+g4(n)+g5(n));
+
+//maillaige
+mesh zh=buildmesh(g2(n)+g1(n)+g3(n)+g4(n)+g5(n));
+plot(zh,wait=1);
+
+//espace
+fespace vh(zh,P1);
+vh u,v,f,h,uold;
+uold=30;
+
+//problème
+problem evolution(u,v)=int2d(zh)(u*v+dt*k*(dx(u)*dx(v)+dy(u)*dy(v)))
+-int2d(zh)(uold*v)
+-int2d(zh)(f*dt*v)
+-int2d(zh,g4)(dt*h*v);
+
+//résolution
+for(int n=0;n<=T/dt;n++){
+t=t+dt;
+f=sin(pi*t)*cos(t*x);
+evolution;
+uold=u;
+h=u-ue;
+plot(u,wait=1,fill=1,value=2,cmm="La fonction u(x,y)");;
+};
